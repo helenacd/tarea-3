@@ -1,1 +1,51 @@
+#define PINBUZZER 10
+#define PINBOTON 2
+#define PINLED 13
+#define PIN_Sensor_ON 11
 
+void setup() {
+  Serial.begin(115200); // Inicia la comunicación serial
+  Peripherals_init();   // Inicializa periféricos
+  TB6612FNG_init();     // Inicializa motor driver
+  Sensors_init();       // Inicializa sensores de línea
+
+  pinMode(PINLED, OUTPUT);
+  digitalWrite(PINLED, LOW);
+
+  Serial.println("=== TEST DE SENSORES - ROBOT RACER ===");
+  Serial.println("Presiona el botón para iniciar...");
+}
+
+void loop() {
+  // Espera presionar botón antes de comenzar
+  if (digitalRead(PINBOTON) == HIGH) {
+    Serial.println("Iniciando testeo de sensores...");
+    delay(500);
+
+    while (true) {
+      // Leer valores de sensores individuales
+      int sensor0 = ReadSensor(0); // Sensor 0
+      int sensor1 = ReadSensor(1); // Sensor 1
+      int sensor2 = ReadSensor(2); // Sensor 2
+      int sensor3 = ReadSensor(3); // Sensor 3
+      int sensor4 = ReadSensor(4); // Sensor 4
+      // Ajusta según número de sensores de tu robot
+
+      // Leer posición relativa
+      int posicion = GetPos();
+
+      // Mostrar datos
+      Serial.print("Sensores: ");
+      Serial.print(sensor0); Serial.print("\t");
+      Serial.print(sensor1); Serial.print("\t");
+      Serial.print(sensor2); Serial.print("\t");
+      Serial.print(sensor3); Serial.print("\t");
+      Serial.print(sensor4);
+
+      Serial.print("\t| Posición: ");
+      Serial.println(posicion);
+
+      delay(100); // Velocidad de actualización
+    }
+  }
+}
